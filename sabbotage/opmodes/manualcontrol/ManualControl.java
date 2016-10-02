@@ -47,17 +47,6 @@ public class ManualControl extends OpMode {
 
     private void driver_controlDriveMotors() {
 
-
-//        FrontLeft = Ch3 + Ch1 + Ch4
-//        RearLeft = Ch3 + Ch1 - Ch4
-//        FrontRight = Ch3 - Ch1 - Ch4
-//        RearRight = Ch3 - Ch1 + Ch4
-
-//        float forward_leftY = -gamepad1.left_stick_y;
-//        float turn_rightX = gamepad1.right_stick_x;
-//        float strafing = gamepad1.left_stick_x;
-
-
         float weightFactor_Forward = 0.33f;
         float weightFactor_TankTurn = 0.33f;
         float weightFactor_Strafing = 0.33f;
@@ -81,7 +70,7 @@ public class ManualControl extends OpMode {
         robot.motorLeftFront.setPower(limitValue(frontLeft));
         robot.motorLeftRear.setPower(limitValue(rearLeft));
 
-        Log.i(KEY, "WHEELS: [" + String.format("%.0f",  robot.motorRightFront.getPower() * 100) + "]----[" + String.format("%.0f", robot.motorLeftFront.getPower() * 100) + "]");
+        Log.i(KEY, "WHEELS: [" + String.format("%.0f", robot.motorRightFront.getPower() * 100) + "]----[" + String.format("%.0f", robot.motorLeftFront.getPower() * 100) + "]");
         Log.i(KEY, "WHEELS: [" + String.format("%.0f", robot.motorRightRear.getPower() * 100) + "]----[" + String.format("%.0f", robot.motorLeftRear.getPower() * 100) + "]");
 
 
