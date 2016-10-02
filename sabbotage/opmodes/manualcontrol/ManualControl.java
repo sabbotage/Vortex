@@ -1,6 +1,8 @@
 
 package org.firstinspires.ftc.teamcode.vortex.sabbotage.opmodes.manualcontrol;
 
+import android.util.Log;
+
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
@@ -12,12 +14,6 @@ public class ManualControl extends OpMode {
     private static final String KEY = "Manual";
 
     private Robot robot = new Robot(hardwareMap);
-
-    private DcMotor motorRightFront;
-    private DcMotor motorRightRear;
-    private DcMotor motorLeftFront;
-    private DcMotor motorLeftRear;
-
 
     private int loopCounter = 0;
 
@@ -66,7 +62,7 @@ public class ManualControl extends OpMode {
         float weightFactor_TankTurn = 0.33f;
         float weightFactor_Strafing = 0.33f;
 
-        float forward =  -gamepad1.left_stick_y * weightFactor_Forward ;
+        float forward = -gamepad1.left_stick_y * weightFactor_Forward;
         float tankTurn = gamepad1.right_stick_x * weightFactor_TankTurn;
         float strafing = gamepad1.left_stick_x * weightFactor_Strafing;
 
@@ -78,19 +74,6 @@ public class ManualControl extends OpMode {
         float frontRight = (float) forward - tankTurn - strafing;
         float rearRight = (float) forward - tankTurn + strafing;
 
-// tankTurn ONLY
-//        float frontLeft = (float) tankTurn_rightX;
-//        float rearLeft = (float) tankTurn_rightX;
-//        float frontRight = (float) -tankTurn_rightX;
-//        float rearRight = (float) -tankTurn_rightX;
-//        Log.i(KEY, " tankTurn_rightX: " + String.format("%.2f", tankTurn_rightX) + " output " + String.format("%.2f", motorRightFront.getPower()));
-
-//        forward_backward ONLY
-//        float frontLeft = (float) forward_backward_leftY;
-//        float rearLeft = (float) forward_backward_leftY;
-//        float frontRight = (float) forward_backward_leftY;
-//        float rearRight = (float) forward_backward_leftY;
-//        Log.i(KEY, " forward_backward_leftY: " + String.format("%.2f", forward_backward_leftY) + " output " + String.format("%.2f", motorRightFront.getPower()));
 
         // write the values to the motors
         robot.motorRightFront.setPower(limitValue(frontRight));
@@ -98,12 +81,9 @@ public class ManualControl extends OpMode {
         robot.motorLeftFront.setPower(limitValue(frontLeft));
         robot.motorLeftRear.setPower(limitValue(rearLeft));
 
+        Log.i(KEY, "WHEELS: [" + String.format("%.0f",  robot.motorRightFront.getPower() * 100) + "]----[" + String.format("%.0f", robot.motorLeftFront.getPower() * 100) + "]");
+        Log.i(KEY, "WHEELS: [" + String.format("%.0f", robot.motorRightRear.getPower() * 100) + "]----[" + String.format("%.0f", robot.motorLeftRear.getPower() * 100) + "]");
 
-//        Log.i(KEY, " tankTurn_rightX: " + String.format("%.2f", tankTurn_rightX) + " output " + String.format("%.2f", motorRightFront.getPower()));
-//        Log.i(KEY, " motorRightFront: " + String.format("%.2f", motorRightFront.getPower()));
-//        Log.i(KEY, " motorRightRear: " + String.format("%.2f", motorRightRear.getPower()));
-//        Log.i(KEY, " motorLeftFront: " + String.format("%.2f", motorLeftFront.getPower()));
-//        Log.i(KEY, " motorLeftRear: " + String.format("%.2f", motorLeftRear.getPower()));
 
     }
 
