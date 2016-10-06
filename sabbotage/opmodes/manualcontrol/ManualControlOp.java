@@ -4,28 +4,27 @@ package org.firstinspires.ftc.teamcode.vortex.sabbotage.opmodes.manualcontrol;
 import android.util.Log;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.vortex.sabbotage.robot.Robot;
 
 
-public class ManualControl extends OpMode {
+public class ManualControlOp extends OpMode {
 
     private static final String KEY = "Manual";
 
-    private Robot robot = new Robot(hardwareMap);
+    private Robot robot;
 
     private int loopCounter = 0;
 
 
-    public ManualControl() {
+    public ManualControlOp() {
     }
 
 
     @Override
     public void init() {
 
-
+        robot = new Robot(hardwareMap);
     }
 
 

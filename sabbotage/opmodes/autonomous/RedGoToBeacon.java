@@ -42,20 +42,19 @@ import org.firstinspires.ftc.teamcode.vortex.sabbotage.robot.Robot;
 import java.util.ArrayList;
 
 
-public class Auto_01 extends org.firstinspires.ftc.teamcode.vortex.sabbotage.opmodes.autonomous.AutoBase {
+public class RedGoToBeacon extends AutonomousOp {
 
 
-    protected void defineStepList() {
+    protected ArrayList<StepInterface> definedStepList() {
 
 
         // Here are our steps (in order) that make up our rescue plan.
-        stepList = new ArrayList<StepInterface>();
+        ArrayList<StepInterface> definedStepList = new ArrayList<StepInterface>();
 
-//       stepList.add(new Step_TurnLeft(90));
-        stepList.add(new Step_FindColorLine(Robot.ColorEnum.BLUE));
-        // stepList.add(new Step_TurnRight(90));
-        stepList.add(new Step_Straight(1000, DcMotor.Direction.FORWARD));
+        definedStepList.add(new Step_Straight(1000, DcMotor.Direction.FORWARD));
 
+
+        return definedStepList;
     }
 
 

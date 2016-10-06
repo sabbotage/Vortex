@@ -29,12 +29,12 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
-package com.sabotage.robot;
+package org.firstinspires.ftc.teamcode.vortex.sabbotage.robot;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeRegister;
-import com.sabotage.opmodes.autonomous.SummerParking;
-import com.sabotage.opmodes.manualcontrol.ManualControl;
+
+import org.firstinspires.ftc.teamcode.vortex.sabbotage.opmodes.manualcontrol.ManualControlOp;
 
 /**
  * Register Op Modes
@@ -55,9 +55,7 @@ public class SabotageOpModeRegister implements OpModeRegister {
      * The second parameter is the op mode class property
      *
      */
-
-
-        manager.register("ManualControl", ManualControl.class);
+        manager.register("ManualControlOp", ManualControlOp.class);
 
 
     }

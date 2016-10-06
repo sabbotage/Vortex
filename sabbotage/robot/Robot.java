@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.vortex.sabbotage.robot;
 
+import android.util.Log;
+
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -33,10 +35,17 @@ public class Robot {
 
         this.hardwareMap = hardwareMap;
 
-        this.motorLeftFront = hardwareMap.dcMotor.get("motorLeftFront");
-        this.motorLeftRear = hardwareMap.dcMotor.get("motorLeftRear");
-        this.motorRightFront = hardwareMap.dcMotor.get("motorRightFront");
-        this.motorRightRear = hardwareMap.dcMotor.get("motorRightRear");
+        if (this.hardwareMap == null) {
+
+            Log.i("ROBOT", "hardwareMap is null");
+
+        }
+
+
+        this.motorLeftFront = this.hardwareMap.dcMotor.get("motorLeftFront");
+        this.motorLeftRear = this.hardwareMap.dcMotor.get("motorLeftRear");
+        this.motorRightFront = this.hardwareMap.dcMotor.get("motorRightFront");
+        this.motorRightRear = this.hardwareMap.dcMotor.get("motorRightRear");
 
         resetHardwarePositions();
     }

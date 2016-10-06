@@ -9,35 +9,30 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import org.firstinspires.ftc.teamcode.vortex.sabbotage.opmodes.autonomous.steps.StepInterface;
 import org.firstinspires.ftc.teamcode.vortex.sabbotage.robot.Robot;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
-public abstract class AutoBase extends OpMode {
+public abstract class AutonomousOp extends OpMode {
 
 
-    abstract protected void defineStepList();
+    private static final String KEY = "AutonomousOp";
 
-    protected List<StepInterface> stepList = null;
+    abstract protected ArrayList<StepInterface> definedStepList();
 
-    private static final String KEY = "AutoBase";
-
+    private List<StepInterface> stepList = null;
     private Robot robot = null;
     private int delayUntilLoopCount = 0;
-
     private int activeStepNumber = 0;
-
     private boolean init_HardwarePositions;
-
     private long MAX_RUN_TIME_MILLI_SECONDS = 31 * 1000;
-
     private Long startTimeMilliSeconds = null;
-
     private boolean rescueIsAborted = false;
 
     @Override
     public void init() {
 
-        defineStepList();
+        this.stepList = definedStepList();
         init_calibrateGyroSensors();
 
     }
