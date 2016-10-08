@@ -9,7 +9,6 @@ import org.firstinspires.ftc.teamcode.vortex.sabbotage.robot.Robot;
 
 
 public class ManualControlOp extends OpMode {
-
     private static final String KEY = "Manual";
 
     private Robot robot;
@@ -24,7 +23,7 @@ public class ManualControlOp extends OpMode {
     @Override
     public void init() {
 
-        robot = new Robot(hardwareMap);
+        this.robot = new Robot(hardwareMap);
     }
 
 
@@ -69,9 +68,10 @@ public class ManualControlOp extends OpMode {
         robot.motorLeftFront.setPower(limitValue(frontLeft));
         robot.motorLeftRear.setPower(limitValue(rearLeft));
 
-        Log.i(KEY, "WHEELS: [" + String.format("%.0f", robot.motorRightFront.getPower() * 100) + "]----[" + String.format("%.0f", robot.motorLeftFront.getPower() * 100) + "]");
-        Log.i(KEY, "WHEELS: [" + String.format("%.0f", robot.motorRightRear.getPower() * 100) + "]----[" + String.format("%.0f", robot.motorLeftRear.getPower() * 100) + "]");
-
+        Log.i(KEY, "--Robot");
+        Log.i(KEY, "WHEELS: [" + String.format("%.0f", robot.motorRightFront.getPower() * 100) + "]---[" + String.format("%.0f", robot.motorLeftFront.getPower() * 100) + "]");
+        Log.i(KEY, "WHEELS: [" + String.format("%.0f", robot.motorRightRear.getPower() * 100) + "]---[" + String.format("%.0f", robot.motorLeftRear.getPower() * 100) + "]");
+        Log.i(KEY, "------------------------------------------");
 
     }
 
@@ -98,7 +98,7 @@ public class ManualControlOp extends OpMode {
 
         telemetry.addData("TextStop", "***Stop happened**" + loopCounter);
 
-    }
+}
 
     /*
      * This method scales the joystick inputValue so for low joystick values, the
