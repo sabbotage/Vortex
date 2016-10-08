@@ -53,7 +53,6 @@ public class ManualControlOp extends OpMode {
         float tankTurn = gamepad1.right_stick_x * weightFactor_TankTurn;
         float strafing = gamepad1.left_stick_x * weightFactor_Strafing;
 
-
         // scale the joystick value to make it easier to control
         // the robot more precisely at slower speeds.
         float frontLeft = (float) forward + tankTurn + strafing;
@@ -62,17 +61,54 @@ public class ManualControlOp extends OpMode {
         float rearRight = (float) forward - tankTurn + strafing;
 
 
+        float maxSpeedfactor = calculateMaxSpeedFactor(frontLeft, rearLeft, frontRight, rearRight);
+
+
         // write the values to the motors
-        robot.motorRightFront.setPower(limitValue(frontRight));
-        robot.motorRightRear.setPower(limitValue(rearRight));
-        robot.motorLeftFront.setPower(limitValue(frontLeft));
-        robot.motorLeftRear.setPower(limitValue(rearLeft));
+        robot.motorRightFront.setPower(limitValue(frontRight * maxSpeedfactor));
+        robot.motorRightRear.setPower(limitValue(rearRight * maxSpeedfactor));
+        robot.motorLeftFront.setPower(limitValue(frontLeft * maxSpeedfactor));
+        robot.motorLeftRear.setPower(limitValue(rearLeft * maxSpeedfactor));
 
         Log.i(KEY, "--Robot");
         Log.i(KEY, "WHEELS: [" + String.format("%.0f", robot.motorRightFront.getPower() * 100) + "]---[" + String.format("%.0f", robot.motorLeftFront.getPower() * 100) + "]");
         Log.i(KEY, "WHEELS: [" + String.format("%.0f", robot.motorRightRear.getPower() * 100) + "]---[" + String.format("%.0f", robot.motorLeftRear.getPower() * 100) + "]");
         Log.i(KEY, "------------------------------------------");
 
+    }
+
+    private float calculateMaxSpeedFactor(float value1, float value2, float value3, float value4) {
+
+
+
+        float maxValue = abs(value1);
+
+        if (maxValue < abs(value2)) {
+            maxValue = abs(value2);
+        }
+
+        if (maxValue < abs(value3)) {
+            maxValue = abs(value3);
+        }
+
+        if (maxValue < abs(value4)) {
+            maxValue = abs(value4);
+        }
+
+
+        if (maxValue < 20) {
+            return 1.0f;
+        }
+
+        float maxSpeedFactor = 100 / maxValue;
+
+
+        return maxSpeedFactor;
+    }
+
+
+    private static float abs(float a) {
+        return (a <= 0.0F) ? 0.0F - a : a;
     }
 
 
@@ -98,7 +134,7 @@ public class ManualControlOp extends OpMode {
 
         telemetry.addData("TextStop", "***Stop happened**" + loopCounter);
 
-}
+    }
 
     /*
      * This method scales the joystick inputValue so for low joystick values, the
