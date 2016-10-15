@@ -62,7 +62,7 @@ public class Step_AngleForward implements StepInterface {
 
     private double determinePower() {
 
-        return .80;
+        return .50;
 
 //        int remainingDistance = rightRemainingDistance();
 //

@@ -13,7 +13,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public class Robot {
 
     private HardwareMap hardwareMap;
-    public int HARDWARE_DELAY = 10;
+    public int HARDWARE_DELAY = 40;
 
     public int loopCounter;
     public Telemetry telemetry;
@@ -54,8 +54,18 @@ public class Robot {
 
     public void resetDriveMotors() {
 
-        resetDriveMotorDirection();
-        disableDriveMotorEncoders();
+        setDriveMotorForwardDirection();
+        runWithoutEncoders();
+    }
+
+
+    public void resetEncodersAndStopMotors() {
+
+        this.motorLeftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        this.motorLeftRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        this.motorRightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        this.motorRightRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
     }
 
 
@@ -65,7 +75,7 @@ public class Robot {
     }
 
 
-    public void resetDriveMotorDirection() {
+    public void setDriveMotorForwardDirection() {
 
         this.motorLeftFront.setDirection(DcMotor.Direction.REVERSE);
         this.motorLeftRear.setDirection(DcMotor.Direction.REVERSE);
@@ -75,12 +85,22 @@ public class Robot {
 
     }
 
-    private void disableDriveMotorEncoders() {
+    public void setDriveMotorReverseDirection() {
+
+        this.motorLeftFront.setDirection(DcMotor.Direction.FORWARD);
+        this.motorLeftRear.setDirection(DcMotor.Direction.FORWARD);
+        this.motorRightFront.setDirection(DcMotor.Direction.REVERSE);
+        this.motorRightRear.setDirection(DcMotor.Direction.REVERSE);
+
+
+    }
+
+    public void runWithoutEncoders() {
 
         this.motorRightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         this.motorRightRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         this.motorLeftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        this.motorRightRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        this.motorLeftRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
     }
 
@@ -101,9 +121,24 @@ public class Robot {
         RIGHT,
 
         LEFT
-
-
     }
+
+
+    public enum StrafeEnum {
+
+        RIGHT,
+
+        LEFT
+    }
+
+
+    public enum DirectionEnum {
+
+        FORWARD,
+
+        REVERSE
+    }
+
 
     public enum MotorPowerEnum {
 

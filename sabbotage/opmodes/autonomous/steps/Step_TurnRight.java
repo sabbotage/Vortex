@@ -10,17 +10,17 @@ import org.firstinspires.ftc.teamcode.vortex.sabbotage.robot.Robot;
 public class Step_TurnRight implements StepInterface {
 
     private static final double TARGET_TOLERANCE = 1;
-    private static final double HIGH_POWER = .8;
+    private static final double HIGH_POWER = .6;
     protected Robot robot;
 
-    private boolean encodersReset = false;
+    private boolean resetMotors = false;
     protected Double targetAngle;
     private int delayUntilLoopCount = 0;
 
 
     public String getLogKey() {
 
-        return "Step_TurnRight";
+        return "OLD_Step_TurnRight";
     }
 
     //constructor
@@ -34,19 +34,17 @@ public class Step_TurnRight implements StepInterface {
     @Override
     public void runStep() {
 
-        resetEncodersAndSetMotorDirectionOnlyOnce();
+        resetMotors();
 
         if (isStillWaiting()) {
             return;
         }
 
-
-//        Log.w(getLogKey(), "Remaining Angle..." + remainingAngle() + " motorPower: " + robot.motorRightFront.getPower());
-
         logIt("runStep");
 
-        turn();
+        robot.runWithoutEncoders();
 
+        turn();
 
     }
 
@@ -55,7 +53,8 @@ public class Step_TurnRight implements StepInterface {
 
         double absRemainingAngle = Math.abs(remainingAngle());
 
-        if (absRemainingAngle > 60) {
+        int slowDownAngle = 60;
+        if (absRemainingAngle > slowDownAngle) {
 
             return HIGH_POWER;
         }
@@ -64,7 +63,7 @@ public class Step_TurnRight implements StepInterface {
             return 0.1;
         }
 
-        return HIGH_POWER * absRemainingAngle / (60);
+        return HIGH_POWER * absRemainingAngle / (slowDownAngle);
 
 
     }
@@ -83,14 +82,26 @@ public class Step_TurnRight implements StepInterface {
 
     private void turn() {
 
+
         double power = determinePower();
 
         if (hasOverShotTargetAngle()) {
-            robot.motorRightFront.setPower(-power);
-            robot.motorLeftFront.setPower(+power);
-        } else {
+
             robot.motorRightFront.setPower(+power);
+            robot.motorRightRear.setPower(+power);
+
             robot.motorLeftFront.setPower(-power);
+            robot.motorLeftRear.setPower(-power);
+
+
+        } else {
+
+            robot.motorRightFront.setPower(-power);
+            robot.motorRightRear.setPower(-power);
+
+            robot.motorLeftFront.setPower(+power);
+            robot.motorLeftRear.setPower(+power);
+
         }
     }
 
@@ -108,20 +119,16 @@ public class Step_TurnRight implements StepInterface {
         return false;
     }
 
-    private void resetEncodersAndSetMotorDirectionOnlyOnce() {
+    private void resetMotors() {
 
-        if (encodersReset == false) {
-            Log.w(getLogKey(), "resetEncodersAndSetMotorDirectionOnlyOnce..." + robot.loopCounter);
-            robot.motorLeftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            robot.motorRightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        if (resetMotors == false) {
+            Log.w(getLogKey(), "resetEncodersAndStopMotors..." + robot.loopCounter);
 
-
-            robot.motorLeftFront.setDirection(DcMotor.Direction.FORWARD);
-            robot.motorRightFront.setDirection(DcMotor.Direction.REVERSE);
-
+            robot.runWithoutEncoders();
+            robot.setDriveMotorForwardDirection();
 
             setLoopDelay();
-            encodersReset = true;
+            resetMotors = true;
         }
 
     }
@@ -136,7 +143,7 @@ public class Step_TurnRight implements StepInterface {
     public boolean isStepDone() {
 
 
-        if (isStillWaiting() || encodersReset == false) {
+        if (isStillWaiting() || resetMotors == false) {
             return false;
 
         }
@@ -145,7 +152,9 @@ public class Step_TurnRight implements StepInterface {
         if (isAtTargetAngle()) {
 
             robot.motorRightFront.setPower(0);
+            robot.motorRightRear.setPower(0);
             robot.motorLeftFront.setPower(0);
+            robot.motorLeftRear.setPower(0);
             logIt("isStepDone");
             return true;
         }
@@ -158,8 +167,6 @@ public class Step_TurnRight implements StepInterface {
     private void logIt(String methodName) {
 
         StringBuilder sb = new StringBuilder();
-        sb.append("methodName:" + methodName);
-        sb.append(" , LoopCounter:" + robot.loopCounter);
         sb.append(" , CurrentAngle:" + robot.gyroSensor.getIntegratedZValue());
         sb.append(" , TargetAngle:" + targetAngle);
         sb.append(" , RemainingAngle:" + remainingAngle());

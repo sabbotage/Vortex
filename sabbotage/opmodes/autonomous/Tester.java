@@ -31,19 +31,17 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package org.firstinspires.ftc.teamcode.vortex.sabbotage.opmodes.autonomous;
 
-import com.qualcomm.robotcore.hardware.DcMotor;
-
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.vortex.sabbotage.opmodes.autonomous.steps.StepInterface;
-import org.firstinspires.ftc.teamcode.vortex.sabbotage.opmodes.autonomous.steps.Step_AngleForward;
-import org.firstinspires.ftc.teamcode.vortex.sabbotage.opmodes.autonomous.steps.Step_FindColorLine;
 import org.firstinspires.ftc.teamcode.vortex.sabbotage.opmodes.autonomous.steps.Step_Straight;
+import org.firstinspires.ftc.teamcode.vortex.sabbotage.opmodes.autonomous.steps.Step_TurnRight;
 import org.firstinspires.ftc.teamcode.vortex.sabbotage.robot.Robot;
 
 import java.util.ArrayList;
 
-
-public class RedGoToBeacon extends AutonomousOp {
+@Autonomous(name = "Tester", group = "Red")
+public class Tester extends AutonomousOp {
 
 
     protected ArrayList<StepInterface> definedStepList() {
@@ -52,7 +50,11 @@ public class RedGoToBeacon extends AutonomousOp {
         // Here are our steps (in order) that make up our rescue plan.
         ArrayList<StepInterface> definedStepList = new ArrayList<StepInterface>();
 
-        definedStepList.add(new Step_AngleForward(6000, DcMotor.Direction.FORWARD));
+        definedStepList.add(new Step_Straight(2000, Robot.DirectionEnum.FORWARD));
+//        definedStepList.add(new Step_Strafe(1000, DcMotorSimple.Direction.FORWARD));
+        definedStepList.add(new Step_TurnRight(180));
+//        definedStepList.add(new Step_Strafe(1000, DcMotorSimple.Direction.REVERSE));
+//        definedStepList.add(new Step_TurnLeft(0));
 
 
         return definedStepList;
