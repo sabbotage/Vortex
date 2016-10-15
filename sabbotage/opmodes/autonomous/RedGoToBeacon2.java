@@ -33,17 +33,14 @@ package org.firstinspires.ftc.teamcode.vortex.sabbotage.opmodes.autonomous;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-
 import org.firstinspires.ftc.teamcode.vortex.sabbotage.opmodes.autonomous.steps.StepInterface;
 import org.firstinspires.ftc.teamcode.vortex.sabbotage.opmodes.autonomous.steps.Step_AngleForward;
-import org.firstinspires.ftc.teamcode.vortex.sabbotage.opmodes.autonomous.steps.Step_FindColorLine;
 import org.firstinspires.ftc.teamcode.vortex.sabbotage.opmodes.autonomous.steps.Step_Straight;
-import org.firstinspires.ftc.teamcode.vortex.sabbotage.robot.Robot;
 
 import java.util.ArrayList;
 
 
-public class RedGoToBeacon extends AutonomousOp {
+public class RedGoToBeacon2 extends AutonomousOp {
 
 
     protected ArrayList<StepInterface> definedStepList() {
@@ -52,7 +49,7 @@ public class RedGoToBeacon extends AutonomousOp {
         // Here are our steps (in order) that make up our rescue plan.
         ArrayList<StepInterface> definedStepList = new ArrayList<StepInterface>();
 
-        definedStepList.add(new Step_AngleForward(6000, DcMotor.Direction.FORWARD));
+        definedStepList.add(new Step_Straight(4000, DcMotor.Direction.FORWARD));
 
 
         return definedStepList;

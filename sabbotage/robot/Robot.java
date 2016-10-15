@@ -12,7 +12,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class Robot {
 
-
+    private HardwareMap hardwareMap;
     public int HARDWARE_DELAY = 10;
 
     public int loopCounter;
@@ -25,10 +25,7 @@ public class Robot {
     public DcMotor motorLeftRear;
 
     public ModernRoboticsI2cGyro gyroSensor;
-    public ColorSensor colorSensor;
-
-
-    private HardwareMap hardwareMap;
+    public ColorSensor colorSensorFloor;
 
 
     public Robot(HardwareMap hardwareMap) {
@@ -37,7 +34,7 @@ public class Robot {
 
         if (this.hardwareMap == null) {
 
-            Log.i("ROBOT", "hardwareMap is null");
+            Log.i("ROBOT", "OUCH!!!! hardwareMap is null");
 
         }
 
@@ -47,11 +44,28 @@ public class Robot {
         this.motorRightFront = this.hardwareMap.dcMotor.get("motorRightFront");
         this.motorRightRear = this.hardwareMap.dcMotor.get("motorRightRear");
 
+        this.gyroSensor = (ModernRoboticsI2cGyro) this.hardwareMap.gyroSensor.get("gyroSensor");
+        this.colorSensorFloor = hardwareMap.colorSensor.get("colorSensorFloor");
+        this.colorSensorFloor.enableLed(true);
+
         resetHardwarePositions();
     }
 
 
+    public void resetDriveMotors() {
+
+        resetDriveMotorDirection();
+        disableDriveMotorEncoders();
+    }
+
+
     private void resetHardwarePositions() {
+
+        resetDriveMotors();
+    }
+
+
+    public void resetDriveMotorDirection() {
 
         this.motorLeftFront.setDirection(DcMotor.Direction.REVERSE);
         this.motorLeftRear.setDirection(DcMotor.Direction.REVERSE);
@@ -60,6 +74,16 @@ public class Robot {
 
 
     }
+
+    private void disableDriveMotorEncoders() {
+
+        this.motorRightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        this.motorRightRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        this.motorLeftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        this.motorRightRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+    }
+
 
     public static enum ColorEnum {
 

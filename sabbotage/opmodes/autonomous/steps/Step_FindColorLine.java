@@ -67,7 +67,7 @@ public class Step_FindColorLine implements StepInterface {
     private boolean hasFoundRedLine() {
 
 
-        if (robot.colorSensor.red() > COLOR_SIGNAL_RED_VALUE
+        if (robot.colorSensorFloor.red() > COLOR_SIGNAL_RED_VALUE
 
                 ) {
 
@@ -81,7 +81,7 @@ public class Step_FindColorLine implements StepInterface {
     private boolean hasFoundWhiteLine() {
 
 
-        if (robot.colorSensor.green() > COLOR_SIGNAL_WHITE_VALUE
+        if (robot.colorSensorFloor.green() > COLOR_SIGNAL_WHITE_VALUE
 
                 ) {
 
@@ -95,7 +95,7 @@ public class Step_FindColorLine implements StepInterface {
     private boolean hasFoundBlueLine() {
 
 
-        if (robot.colorSensor.blue() > COLOR_SIGNAL_BLUE_VALUE
+        if (robot.colorSensorFloor.blue() > COLOR_SIGNAL_BLUE_VALUE
 
                 ) {
 
@@ -120,7 +120,7 @@ public class Step_FindColorLine implements StepInterface {
         if (initialized == false) {
             Log.w(getLogKey(), "initializeStep..." + robot.loopCounter);
 
-            robot.colorSensor.enableLed(true);
+            robot.colorSensorFloor.enableLed(true);
             setLoopDelay();
             initialized = true;
         }
@@ -133,10 +133,10 @@ public class Step_FindColorLine implements StepInterface {
             Log.w(getLogKey(), "resetEncodersAndSetMotorDirectionOnlyOnce..." + robot.loopCounter);
 
 
-            robot.motorRightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            robot.motorRightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            robot.motorLeftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            robot.motorRightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.motorRightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            robot.motorRightRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            robot.motorLeftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            robot.motorRightRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
 
             setLoopDelay();
@@ -186,7 +186,7 @@ public class Step_FindColorLine implements StepInterface {
 
         StringBuilder sb = new StringBuilder();
         sb.append(methodName + robot.loopCounter);
-        sb.append("  , Results:" + "ColorSensor Blue:" + robot.colorSensor.blue());
+        sb.append("  , Results:" + "ColorSensor Blue:" + robot.colorSensorFloor.blue());
         sb.append("  , ML" + robot.motorLeftFront.getPower() + " MR:" + +robot.motorRightFront.getPower());
 
 

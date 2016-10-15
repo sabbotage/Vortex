@@ -34,6 +34,8 @@ package org.firstinspires.ftc.teamcode.vortex;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeRegistrar;
 
+import org.firstinspires.ftc.teamcode.vortex.sabbotage.opmodes.autonomous.RedGoToBeacon;
+import org.firstinspires.ftc.teamcode.vortex.sabbotage.opmodes.autonomous.RedGoToBeacon2;
 import org.firstinspires.ftc.teamcode.vortex.sabbotage.opmodes.manualcontrol.ManualControlOp;
 
 /**
@@ -66,6 +68,8 @@ public class RegisterMyOpModes {
     public static void registerMyOpModes(OpModeManager manager) {
 
         manager.register("ManualControlOp", ManualControlOp.class);
+        manager.register("RedGoToBeacon", RedGoToBeacon.class);
+        manager.register("RedGoToBeacon2", RedGoToBeacon2.class);
 
     }
 }

@@ -47,14 +47,14 @@ public class Step_Straight implements StepInterface {
 
         initializeMotors();
 
+        double motorPower = determinePower();
+        robot.motorRightFront.setPower(motorPower);
+        robot.motorRightRear.setPower(motorPower);
+        robot.motorLeftFront.setPower(motorPower);
+        robot.motorLeftRear.setPower(motorPower);
 
-        robot.motorRightFront.setPower(determinePower() * MOTOR_POWER_BALANCE_FACTOR);
-        robot.motorRightRear.setPower(determinePower() * MOTOR_POWER_BALANCE_FACTOR);
-        robot.motorLeftFront.setPower(determinePower());
-        robot.motorRightRear.setPower(determinePower());
 
-
-        Log.w(getLogKey(), "remaining:" + rightRemainingDistance() + " motor power..." + robot.motorRightFront.getPower() + "    " + robot.loopCounter);
+//        Log.w(getLogKey(), "remaining:" + rightRemainingDistance() + " motor power..." + robot.motorRightFront.getPower() + "    " + robot.loopCounter);
 
         logIt("Loop:");
     }
@@ -62,21 +62,22 @@ public class Step_Straight implements StepInterface {
 
     private double determinePower() {
 
+        return .50;
 
-        int remainingDistance = rightRemainingDistance();
-
-        if (remainingDistance > 1500) {
-
-            return this.motorPowerEnum.getValue();
-        }
-
-        if (remainingDistance < 200) {
-
-            return 0.1;
-        }
-
-
-        return this.motorPowerEnum.getValue() * rightRemainingDistance() / 1500;
+//        int remainingDistance = rightRemainingDistance();
+//
+//        if (remainingDistance > 1500) {
+//
+//            return this.motorPowerEnum.getValue();
+//        }
+//
+//        if (remainingDistance < 200) {
+//
+//            return 0.1;
+//        }
+//
+//
+//        return this.motorPowerEnum.getValue() * rightRemainingDistance() / 1500;
 
     }
 
@@ -95,18 +96,24 @@ public class Step_Straight implements StepInterface {
         if (encodersReset == false) {
             Log.w(getLogKey(), "resetEncodersAndSetMotorDirectionOnlyOnce..." + robot.loopCounter);
             robot.motorLeftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.motorLeftRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             robot.motorRightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.motorRightRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
             if (direction.equals(DcMotor.Direction.FORWARD)) {
 
-                robot.motorLeftFront.setDirection(DcMotor.Direction.FORWARD);
-                robot.motorRightFront.setDirection(DcMotor.Direction.REVERSE);
+                robot.motorLeftFront.setDirection(DcMotor.Direction.REVERSE);
+                robot.motorLeftRear.setDirection(DcMotor.Direction.REVERSE);
+                robot.motorRightFront.setDirection(DcMotor.Direction.FORWARD);
+                robot.motorRightRear.setDirection(DcMotor.Direction.FORWARD);
 
 
             } else {
 
-                robot.motorLeftFront.setDirection(DcMotor.Direction.REVERSE);
-                robot.motorRightFront.setDirection(DcMotor.Direction.FORWARD);
+                robot.motorLeftFront.setDirection(DcMotor.Direction.FORWARD);
+                robot.motorLeftRear.setDirection(DcMotor.Direction.FORWARD);
+                robot.motorRightFront.setDirection(DcMotor.Direction.REVERSE);
+                robot.motorRightRear.setDirection(DcMotor.Direction.REVERSE);
             }
 
             setLoopDelay();
@@ -126,14 +133,12 @@ public class Step_Straight implements StepInterface {
             robot.motorLeftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             robot.motorLeftFront.setTargetPosition(distanceEncoderCounts);
 
-            robot.motorRightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.motorLeftRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
+            robot.motorRightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-            robot.motorRightFront.setTargetPosition(distanceEncoderCounts);
+            robot.motorRightRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-
-            robot.motorRightFront.setPower(this.motorPowerEnum.getValue() * MOTOR_POWER_BALANCE_FACTOR);
-            robot.motorLeftFront.setPower(this.motorPowerEnum.getValue());
 
             initializedMotors = true;
             setLoopDelay();
@@ -177,11 +182,15 @@ public class Step_Straight implements StepInterface {
 
             logIt("isStepDone:");
 
-            robot.motorLeftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            robot.motorRightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.motorLeftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.motorLeftRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.motorRightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.motorRightRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
             robot.motorRightFront.setPower(0);
+            robot.motorRightRear.setPower(0);
             robot.motorLeftFront.setPower(0);
+            robot.motorLeftRear.setPower(0);
 
             return true;
         }
@@ -199,8 +208,8 @@ public class Step_Straight implements StepInterface {
 
         StringBuilder sb = new StringBuilder();
         sb.append(methodName + robot.loopCounter);
-        sb.append(" , RightRemaining:" + (robot.motorRightFront.getTargetPosition() - robot.motorRightFront.getCurrentPosition()));
-        sb.append(" , Delta:" + (rightRemainingDistance() - getLeftRemainingPosition()));
+//        sb.append(" , RightRemaining:" + (robot.motorRightFront.getTargetPosition() - robot.motorRightFront.getCurrentPosition()));
+//        sb.append(" , Delta:" + (rightRemainingDistance() - getLeftRemainingPosition()));
         sb.append(" , LeftRemaining :" + (robot.motorLeftFront.getTargetPosition() - robot.motorLeftFront.getCurrentPosition()));
         sb.append(" , LeftCurrent :" + (robot.motorLeftFront.getCurrentPosition()) + " rightCurrent:" + robot.motorRightFront.getCurrentPosition());
         Log.i(getLogKey(), sb.toString());

@@ -29,9 +29,10 @@ public abstract class AutonomousOp extends OpMode {
     private Long startTimeMilliSeconds = null;
     private boolean rescueIsAborted = false;
 
+
     @Override
     public void init() {
-
+        this.robot = new Robot(hardwareMap);
         this.stepList = definedStepList();
         init_calibrateGyroSensors();
 
@@ -108,7 +109,7 @@ public abstract class AutonomousOp extends OpMode {
     }
 
     private void sendMessageToDriverPhone() {
-        robot.telemetry.addData("Status1", "Rescue Step:" + this.activeStepNumber + " Loop:" + robot.loopCounter);
+//        robot.telemetry.addData("Status1", "Rescue Step:" + this.activeStepNumber + " Loop:" + robot.loopCounter);
 
     }
 
@@ -145,8 +146,8 @@ public abstract class AutonomousOp extends OpMode {
 
     private void celebrate() {
 
-        robot.telemetry.addData("CELEBRATE with Happy Dance", this.activeStepNumber + " Loop:" + robot.loopCounter);
-        robot.telemetry.addData("DURATION", (System.currentTimeMillis() / 1000 - this.startTimeMilliSeconds / 1000));
+//        robot.telemetry.addData("CELEBRATE with Happy Dance", this.activeStepNumber + " Loop:" + robot.loopCounter);
+//        robot.telemetry.addData("DURATION", (System.currentTimeMillis() / 1000 - this.startTimeMilliSeconds / 1000));
         Log.i(KEY + "_END", "DURATION: " + (System.currentTimeMillis() / 1000 - this.startTimeMilliSeconds / 1000));
         stop();
 
@@ -157,7 +158,7 @@ public abstract class AutonomousOp extends OpMode {
         StringBuilder sb = new StringBuilder();
         sb.append("LoopCount:" + robot.loopCounter + " Step:" + activeStepNumber);
         sb.append(" Gyro Rotation:" + robot.gyroSensor.getIntegratedZValue());
-        Log.i(KEY, sb.toString());
+//        Log.i(KEY, sb.toString());
 
     }
 
