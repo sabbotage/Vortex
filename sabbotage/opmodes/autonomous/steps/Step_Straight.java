@@ -144,7 +144,7 @@ public class Step_Straight implements StepInterface {
 
     private void initializeMotorDirection() {
 
-        if (this.direction.equals(Robot.DirectionEnum.FORWARD)) {
+        if (Robot.DirectionEnum.FORWARD.equals(this.direction)) {
 
             robot.setDriveMotorForwardDirection();
 

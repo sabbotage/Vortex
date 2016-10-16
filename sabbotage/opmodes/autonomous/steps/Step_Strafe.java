@@ -10,8 +10,8 @@ import org.firstinspires.ftc.teamcode.vortex.sabbotage.robot.Robot;
 public class Step_Strafe implements StepInterface {
 
     private final Integer distanceEncoderCounts;
-    private final DcMotor.Direction direction;
-    private final Robot.MotorPowerEnum motorPowerEnum = Robot.MotorPowerEnum.Med;
+    private final Robot.StrafeEnum direction;
+    private final Robot.MotorPowerEnum motorPowerEnum = Robot.MotorPowerEnum.FTL;
 
     private Robot robot;
 
@@ -27,7 +27,7 @@ public class Step_Strafe implements StepInterface {
     private int delayUntilLoopCount = 0;
 
     //constructor
-    public Step_Strafe(Integer distanceEncoderCounts, DcMotor.Direction direction) {
+    public Step_Strafe(Integer distanceEncoderCounts, Robot.StrafeEnum direction) {
         this.distanceEncoderCounts = distanceEncoderCounts;
         this.direction = direction;
     }
@@ -41,7 +41,8 @@ public class Step_Strafe implements StepInterface {
     @Override
     public void runStep() {
 
-        resetMotors();
+        // change to take an input boolean
+        resetEncodersAndStopMotorsOnce();
 
         if (isStillWaiting()) {
             return;
@@ -53,43 +54,64 @@ public class Step_Strafe implements StepInterface {
             return;
         }
 
-        double motorPower = determinePower();
-
-        robot.motorRightFront.setPower(-motorPower);
-        robot.motorRightRear.setPower(motorPower);
-        robot.motorLeftFront.setPower(motorPower);
-        robot.motorLeftRear.setPower(-motorPower);
-
-    }
-
-
-    private double determinePower() {
-
-
-        int remainingDistance = getRemainingDistance();
-
-
-        if (remainingDistance < VERY_SLOW_MODE_REMAINING_DISTANCE) {
-
-            return 0.5;
-        }
-//hi
-        if (remainingDistance < SLOW_MODE_REMAINING_DISANCE) {
-
-            return this.motorPowerEnum.getValue() * remainingDistance / SLOW_MODE_REMAINING_DISANCE;
-        }
-
-
-        return this.motorPowerEnum.getValue();
+        strafe();
 
     }
 
 
     private DcMotor getEncoderMotor() {
 
-        return robot.motorRightRear;
+        if (Robot.StrafeEnum.RIGHT.equals(this.direction)) {
+
+            return robot.motorRightRear;
+        } else {
+
+            return robot.motorLeftRear;
+        }
+    }
+
+    private void strafe() {
+
+        double motorPower = determinePower();
+
+        if (Robot.StrafeEnum.RIGHT.equals(this.direction)) {
+
+            robot.motorRightFront.setPower(-motorPower);
+            robot.motorRightRear.setPower(motorPower);
+            robot.motorLeftFront.setPower(motorPower);
+            robot.motorLeftRear.setPower(-motorPower);
+
+        } else {
+
+            robot.motorRightFront.setPower(motorPower);
+            robot.motorRightRear.setPower(-motorPower);
+            robot.motorLeftFront.setPower(-motorPower);
+            robot.motorLeftRear.setPower(motorPower);
+        }
 
     }
+
+    private double determinePower() {
+
+
+//        int remainingDistance = getRemainingDistance();
+//
+//
+//        if (remainingDistance < VERY_SLOW_MODE_REMAINING_DISTANCE) {
+//
+//            return 0.5;
+//        }
+//
+//        if (remainingDistance < SLOW_MODE_REMAINING_DISANCE) {
+//
+//            return this.motorPowerEnum.getValue() * remainingDistance / SLOW_MODE_REMAINING_DISANCE;
+//        }
+
+
+        return this.motorPowerEnum.getValue();
+
+    }
+
 
     private boolean isStillWaiting() {
 
@@ -100,7 +122,7 @@ public class Step_Strafe implements StepInterface {
         return false;
     }
 
-    private void resetMotors() {
+    private void resetEncodersAndStopMotorsOnce() {
 
         if (resetMotors == false) {
             Log.w(getLogKey(), "resetEncodersAndStopMotors..." + robot.loopCounter);
@@ -119,7 +141,7 @@ public class Step_Strafe implements StepInterface {
 
         if (initializedMotors == false) {
 
-            initializeMotorDirection();
+            robot.setDriveMotorForwardDirection();
 
             robot.runWithoutEncoders();
 
@@ -139,20 +161,6 @@ public class Step_Strafe implements StepInterface {
         }
     }
 
-    private void initializeMotorDirection() {
-
-        if (this.direction.equals(DcMotor.Direction.FORWARD)) {
-
-            robot.setDriveMotorForwardDirection();
-
-        } else {
-
-            robot.setDriveMotorReverseDirection();
-
-        }
-
-
-    }
 
     private int getRemainingDistance() {
 

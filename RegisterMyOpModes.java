@@ -35,7 +35,6 @@ import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeRegistrar;
 
 import org.firstinspires.ftc.teamcode.vortex.sabbotage.opmodes.autonomous.Tester;
-import org.firstinspires.ftc.teamcode.vortex.sabbotage.opmodes.autonomous.RedStraight;
 import org.firstinspires.ftc.teamcode.vortex.sabbotage.opmodes.manualcontrol.ManualControlOp;
 
 /**
@@ -68,7 +67,6 @@ public class RegisterMyOpModes {
     public static void registerMyOpModes(OpModeManager manager) {
 
         manager.register("ManualControlOp", ManualControlOp.class);
-        manager.register("RedStraight", RedStraight.class);
         manager.register("Tester", Tester.class);
 
     }

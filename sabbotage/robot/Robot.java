@@ -9,6 +9,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
+// TODO use the robot for single loopCounter and delayUntilLoopCount
+// and stillWaiting.
 
 public class Robot {
 
@@ -61,11 +63,11 @@ public class Robot {
 
     public void resetEncodersAndStopMotors() {
 
+
         this.motorLeftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         this.motorLeftRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         this.motorRightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         this.motorRightRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
     }
 
 

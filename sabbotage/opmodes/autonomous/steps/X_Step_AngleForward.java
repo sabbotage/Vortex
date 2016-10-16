@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.vortex.sabbotage.robot.Robot;
 
-public class Step_AngleForward implements StepInterface {
+public class X_Step_AngleForward implements StepInterface {
 
     private final Integer distanceEncoderCounts;
     private final DcMotor.Direction direction;
@@ -23,7 +23,7 @@ public class Step_AngleForward implements StepInterface {
     private static final double MOTOR_POWER_BALANCE_FACTOR = 1.0;
 
     //constructor
-    public Step_AngleForward(Integer distanceEncoderCounts, DcMotor.Direction direction) {
+    public X_Step_AngleForward(Integer distanceEncoderCounts, DcMotor.Direction direction) {
         this.distanceEncoderCounts = distanceEncoderCounts + DONE_TOLERANCE;
         this.direction = direction;
     }
