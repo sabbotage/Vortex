@@ -7,9 +7,10 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.vortex.sabbotage.robot.Robot;
 
-public class Step_Strafe implements StepInterface {
+public class Step_ZigZap implements StepInterface {
 
     private final Integer distanceEncoderCounts;
+
     private final Robot.StrafeEnum direction;
     private final Robot.MotorPowerEnum motorPowerEnum;
 
@@ -20,21 +21,30 @@ public class Step_Strafe implements StepInterface {
 
     private final int DONE_TOLERANCE = 100;
 
+    private DriveModeEnum currentDriveMode = DriveModeEnum.GO_STRAIGHT;
+
+    private static final int NUMBER_OF_SEGMENTS = 10;
+
+    private int segmentCounter = 1;
 
     private static final double MOTOR_POWER_BALANCE_FACTOR = 1.0;
 
 
     // Constructor, called to create an instance of this class.
-    public Step_Strafe(Integer distanceEncoderCounts, Robot.StrafeEnum direction) {
+    public Step_ZigZap(Integer distanceEncoderCounts, Robot.StrafeEnum direction) {
+
         this.distanceEncoderCounts = distanceEncoderCounts;
         this.direction = direction;
+
         this.motorPowerEnum = Robot.MotorPowerEnum.FTL;
+
+
     }
 
 
     @Override
     public String getLogKey() {
-        return "Step_Strafe";
+        return "Step_ZigZag";
     }
 
 
@@ -53,10 +63,49 @@ public class Step_Strafe implements StepInterface {
             return;
         }
 
-        strafe();
+        processDriveSegments();
+
+
+        if (DriveModeEnum.GO_STRAIGHT.equals(currentDriveMode)) {
+
+            goStraight();
+
+        } else {
+
+            strafe();
+        }
 
     }
 
+    private void processDriveSegments() {
+
+
+        DcMotor encoderMotor = getEncoderMotor();
+        int currentPosition = encoderMotor.getCurrentPosition();
+
+        int segmentTargetPosition = this.segmentCounter * this.distanceEncoderCounts / NUMBER_OF_SEGMENTS;
+
+        if (currentPosition > segmentTargetPosition) {
+
+            this.segmentCounter++;
+            toggleDriveMode();
+        }
+
+    }
+
+
+    private void toggleDriveMode() {
+
+        if (DriveModeEnum.GO_STRAIGHT.equals(this.currentDriveMode)) {
+
+            this.currentDriveMode = DriveModeEnum.STRAFE;
+
+        } else {
+
+            this.currentDriveMode = DriveModeEnum.GO_STRAIGHT;
+        }
+
+    }
 
     private DcMotor getEncoderMotor() {
 
@@ -87,6 +136,19 @@ public class Step_Strafe implements StepInterface {
             robot.motorLeftFront.setPower(-motorPower);
             robot.motorLeftRear.setPower(motorPower);
         }
+
+    }
+
+
+    private void goStraight() {
+
+        double motorPower = determineMotorPower();
+
+        robot.motorRightFront.setPower(motorPower);
+        robot.motorRightRear.setPower(motorPower);
+        robot.motorLeftFront.setPower(motorPower);
+        robot.motorLeftRear.setPower(motorPower);
+
 
     }
 
@@ -122,7 +184,7 @@ public class Step_Strafe implements StepInterface {
 
             DcMotor encoderMotor = getEncoderMotor();
             encoderMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            encoderMotor.setTargetPosition(distanceEncoderCounts);
+            encoderMotor.setTargetPosition(this.distanceEncoderCounts);
 
             robot.setLoopDelay();
             initializedMotors_DoneFlag = true;
@@ -194,5 +256,12 @@ public class Step_Strafe implements StepInterface {
         this.robot = robot;
     }
 
+
+    public enum DriveModeEnum {
+
+        GO_STRAIGHT,
+
+        STRAFE
+    }
 
 }

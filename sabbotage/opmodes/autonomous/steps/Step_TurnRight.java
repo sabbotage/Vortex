@@ -3,45 +3,43 @@ package org.firstinspires.ftc.teamcode.vortex.sabbotage.opmodes.autonomous.steps
 
 import android.util.Log;
 
-import com.qualcomm.robotcore.hardware.DcMotor;
-
 import org.firstinspires.ftc.teamcode.vortex.sabbotage.robot.Robot;
 
 public class Step_TurnRight implements StepInterface {
 
     private static final double TARGET_TOLERANCE = 1;
-    private static final double HIGH_POWER = .6;
+    private static final int SLOW_MODE_REMAINING_ANGLE = 60;
+
+    private Robot.MotorPowerEnum motorPowerEnum = Robot.MotorPowerEnum.High;
+
     protected Robot robot;
 
-    private boolean resetMotors = false;
+    private boolean resetMotors_DoneFlag = false;
     protected Double targetAngle;
-    private int delayUntilLoopCount = 0;
 
 
-    public String getLogKey() {
-
-        return "OLD_Step_TurnRight";
-    }
-
-    //constructor
+    // Constructor, called to create an instance of this class.
     public Step_TurnRight(double angleDegrees) {
 
         this.targetAngle = angleDegrees;
+    }
 
+    @Override
+    public String getLogKey() {
+        return "Step_TurnRight";
     }
 
 
     @Override
     public void runStep() {
 
-        resetMotors();
+        resetMotorsAndInitializeDirection_Only_Once();
 
-        if (isStillWaiting()) {
+        if (robot.isStillWaiting()) {
             return;
         }
 
-        logIt("runStep");
-
+        // We should not need to do this, but have see when motor(s) have not been reset.
         robot.runWithoutEncoders();
 
         turn();
@@ -53,19 +51,25 @@ public class Step_TurnRight implements StepInterface {
 
         double absRemainingAngle = Math.abs(remainingAngle());
 
-        int slowDownAngle = 60;
-        if (absRemainingAngle > slowDownAngle) {
 
-            return HIGH_POWER;
+        if (absRemainingAngle < SLOW_MODE_REMAINING_ANGLE) {
+
+            return limitMinValue(this.motorPowerEnum.getValue() * absRemainingAngle / (SLOW_MODE_REMAINING_ANGLE));
         }
 
-        if (absRemainingAngle < 8) {
-            return 0.1;
+
+        return this.motorPowerEnum.getValue();
+
+    }
+
+    private double limitMinValue(double input) {
+
+        if (input < .1) {
+
+            return .1;
         }
 
-        return HIGH_POWER * absRemainingAngle / (slowDownAngle);
-
-
+        return input;
     }
 
 
@@ -93,15 +97,17 @@ public class Step_TurnRight implements StepInterface {
             robot.motorLeftFront.setPower(-power);
             robot.motorLeftRear.setPower(-power);
 
+            logIt("Overshot:");
 
         } else {
+
 
             robot.motorRightFront.setPower(-power);
             robot.motorRightRear.setPower(-power);
 
             robot.motorLeftFront.setPower(+power);
             robot.motorLeftRear.setPower(+power);
-
+            logIt("Turning:");
         }
     }
 
@@ -110,32 +116,17 @@ public class Step_TurnRight implements StepInterface {
     }
 
 
-    private boolean isStillWaiting() {
+    private void resetMotorsAndInitializeDirection_Only_Once() {
 
-        if (delayUntilLoopCount > robot.loopCounter) {
-            Log.i(getLogKey(), "Waiting..." + robot.loopCounter);
-            return true;
-        }
-        return false;
-    }
-
-    private void resetMotors() {
-
-        if (resetMotors == false) {
-            Log.w(getLogKey(), "resetEncodersAndStopMotors..." + robot.loopCounter);
+        if (resetMotors_DoneFlag == false) {
 
             robot.runWithoutEncoders();
             robot.setDriveMotorForwardDirection();
 
-            setLoopDelay();
-            resetMotors = true;
+            resetMotors_DoneFlag = true;
+            robot.setLoopDelay();
         }
 
-    }
-
-    private void setLoopDelay() {
-
-        this.delayUntilLoopCount = robot.loopCounter + robot.HARDWARE_DELAY;
     }
 
 
@@ -143,7 +134,7 @@ public class Step_TurnRight implements StepInterface {
     public boolean isStepDone() {
 
 
-        if (isStillWaiting() || resetMotors == false) {
+        if (robot.isStillWaiting() || resetMotors_DoneFlag == false) {
             return false;
 
         }
@@ -151,11 +142,12 @@ public class Step_TurnRight implements StepInterface {
 
         if (isAtTargetAngle()) {
 
+            logIt("isStepDone");
+
             robot.motorRightFront.setPower(0);
             robot.motorRightRear.setPower(0);
             robot.motorLeftFront.setPower(0);
             robot.motorLeftRear.setPower(0);
-            logIt("isStepDone");
             return true;
         }
 

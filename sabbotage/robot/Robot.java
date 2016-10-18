@@ -18,8 +18,10 @@ public class Robot {
     public int HARDWARE_DELAY = 40;
 
     public int loopCounter;
-    public Telemetry telemetry;
+    private int delayUntilLoopCount = 0;
 
+
+    public Telemetry telemetry;
 
     public DcMotor motorRightFront;
     public DcMotor motorRightRear;
@@ -63,11 +65,12 @@ public class Robot {
 
     public void resetEncodersAndStopMotors() {
 
-
+        Log.w("ROBOT", "resetEncodersAndStopMotors..." + loopCounter);
         this.motorLeftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         this.motorLeftRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         this.motorRightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         this.motorRightRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
     }
 
 
@@ -106,6 +109,20 @@ public class Robot {
 
     }
 
+
+    public boolean isStillWaiting() {
+
+        if (delayUntilLoopCount > loopCounter) {
+            Log.i("ROBOT", "Waiting..." + loopCounter);
+            return true;
+        }
+        return false;
+    }
+
+    public void setLoopDelay() {
+
+        this.delayUntilLoopCount = loopCounter + HARDWARE_DELAY;
+    }
 
     public static enum ColorEnum {
 

@@ -11,25 +11,26 @@ public class Step_Straight implements StepInterface {
 
     private final Integer distanceEncoderCounts;
     private final Robot.DirectionEnum direction;
-    private final Robot.MotorPowerEnum motorPowerEnum = Robot.MotorPowerEnum.FTL;
+    private final Robot.MotorPowerEnum motorPowerEnum;
 
     private Robot robot;
 
-    private boolean resetMotors = false;
-    private boolean initializedMotors = false;
+    private boolean resetMotors_DoneFlag = false;
+    private boolean initializedMotors_DoneFlag = false;
+
+    private final int SLOW_MODE_REMAINING_DISANCE = 1500;
 
     private final int DONE_TOLERANCE = 100;
-    private final int SLOW_MODE_REMAINING_DISANCE = 1500;
-    private final int VERY_SLOW_MODE_REMAINING_DISTANCE = 200;
 
 
     private static final double MOTOR_POWER_BALANCE_FACTOR = 1.0;
-    private int delayUntilLoopCount = 0;
 
-    //constructor
+    // Constructor, called to create an instance of this class.
     public Step_Straight(Integer distanceEncoderCounts, Robot.DirectionEnum direction) {
+
         this.distanceEncoderCounts = distanceEncoderCounts;
         this.direction = direction;
+        this.motorPowerEnum = Robot.MotorPowerEnum.FTL;
     }
 
 
@@ -48,42 +49,46 @@ public class Step_Straight implements StepInterface {
     @Override
     public void runStep() {
 
-        resetMotors();
+        resetEncodersAndStopMotors_Only_Once();
 
-        if (isStillWaiting()) {
+
+        if (robot.isStillWaiting()) {
             return;
         }
 
-        initializeMotors();
+        initializeMotors_Only_Once();
 
-        if (isStillWaiting()) {
+        if (robot.isStillWaiting()) {
             return;
         }
 
-        double motorPower = determinePower();
+        goStraight();
+
+
+    }
+
+    private void goStraight() {
+
+        double motorPower = determineMotorPower();
 
         robot.motorRightFront.setPower(motorPower);
         robot.motorRightRear.setPower(motorPower);
         robot.motorLeftFront.setPower(motorPower);
         robot.motorLeftRear.setPower(motorPower);
 
+
     }
 
 
-    private double determinePower() {
+    private double determineMotorPower() {
 
 
         int remainingDistance = getRemainingDistance();
 
 
-        if (remainingDistance < VERY_SLOW_MODE_REMAINING_DISTANCE) {
-
-            return 0.5;
-        }
-
         if (remainingDistance < SLOW_MODE_REMAINING_DISANCE) {
 
-            return this.motorPowerEnum.getValue() * remainingDistance / SLOW_MODE_REMAINING_DISANCE;
+            return limitMinValue(this.motorPowerEnum.getValue() * remainingDistance / SLOW_MODE_REMAINING_DISANCE);
         }
 
 
@@ -91,54 +96,49 @@ public class Step_Straight implements StepInterface {
 
     }
 
+    private double limitMinValue(double input) {
 
-    private boolean isStillWaiting() {
+        if (input < .1) {
 
-        if (delayUntilLoopCount > robot.loopCounter) {
-            Log.i(getLogKey(), "Waiting..." + robot.loopCounter);
-            return true;
+            return .1;
         }
-        return false;
+
+        return input;
     }
 
-    private void resetMotors() {
+    private void resetEncodersAndStopMotors_Only_Once() {
 
-        if (resetMotors == false) {
-            Log.w(getLogKey(), "resetEncodersAndStopMotors..." + robot.loopCounter);
+        if (resetMotors_DoneFlag == false) {
 
             robot.resetEncodersAndStopMotors();
+            resetMotors_DoneFlag = true;
 
-            setLoopDelay();
-            resetMotors = true;
+            robot.setLoopDelay();
         }
 
     }
 
 
-    private void initializeMotors() {
+    private void initializeMotors_Only_Once() {
 
 
-        if (initializedMotors == false) {
+        if (initializedMotors_DoneFlag == false) {
 
             initializeMotorDirection();
 
-            robot.motorLeftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.motorLeftFront.setTargetPosition(distanceEncoderCounts);
 
-            robot.motorLeftRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            robot.motorRightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            robot.motorRightRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            robot.runWithoutEncoders();
+
+            DcMotor encoderMotor = getEncoderMotor();
+            encoderMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            encoderMotor.setTargetPosition(distanceEncoderCounts);
+
+            robot.setLoopDelay();
+            initializedMotors_DoneFlag = true;
+
+            logIt("initializeMotors_Only_Once ...");
 
 
-            StringBuilder sb = new StringBuilder();
-
-            sb.append("initializeMotors ...");
-            sb.append(" StartPosition:" + robot.motorLeftFront.getCurrentPosition());
-            sb.append(" TargetPosition" + robot.motorLeftFront.getTargetPosition());
-            Log.i(getLogKey(), sb.toString());
-
-            setLoopDelay();
-            initializedMotors = true;
         }
     }
 
@@ -154,31 +154,29 @@ public class Step_Straight implements StepInterface {
 
         }
 
-
     }
 
     private int getRemainingDistance() {
 
-        return Math.abs(robot.motorLeftFront.getTargetPosition() - robot.motorLeftFront.getCurrentPosition());
+        DcMotor encoderMotor = getEncoderMotor();
+
+        return Math.abs(encoderMotor.getTargetPosition() - encoderMotor.getCurrentPosition());
     }
 
 
     @Override
     public boolean isStepDone() {
 
-        if (isStillWaiting() || resetMotors == false || initializedMotors == false) {
+        if (robot.isStillWaiting() || resetMotors_DoneFlag == false || initializedMotors_DoneFlag == false) {
             return false;
         }
 
 
         if (isDistanceDone()) {
 
-            logIt("isStepDone:");
+            logIt("Step is Done:");
 
-            robot.motorLeftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            robot.motorLeftRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            robot.motorRightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            robot.motorRightRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.runWithoutEncoders();
 
             robot.motorRightFront.setPower(0);
             robot.motorRightRear.setPower(0);
@@ -208,11 +206,6 @@ public class Step_Straight implements StepInterface {
 
     }
 
-
-    private void setLoopDelay() {
-
-        this.delayUntilLoopCount = robot.loopCounter + robot.HARDWARE_DELAY;
-    }
 
     @Override
     public boolean isAborted() {
