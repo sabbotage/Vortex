@@ -12,7 +12,7 @@ public class Step_FindColorLine implements StepInterface {
     private static final int COLOR_SIGNAL_BLUE_VALUE = 30;
     private static final int COLOR_SIGNAL_WHITE_VALUE = 80;
 
-    private Robot.MotorPowerEnum motorPowerEnum = Robot.MotorPowerEnum.Med;
+    private Robot.MotorPowerEnum motorPowerEnum = Robot.MotorPowerEnum.LowLow;
     private Robot robot;
 
 
@@ -128,7 +128,7 @@ public class Step_FindColorLine implements StepInterface {
             robot.motorRightFront.setPower(0);
             robot.motorRightRear.setPower(0);
             robot.motorLeftFront.setPower(0);
-            robot.motorRightRear.setPower(0);
+            robot.motorLeftRear.setPower(0);
 
 
             logIt("isStepDone: ");
@@ -143,8 +143,7 @@ public class Step_FindColorLine implements StepInterface {
 
         StringBuilder sb = new StringBuilder();
         sb.append(methodName + robot.loopCounter);
-        sb.append("  , Results:" + "ColorSensor Blue:" + robot.colorSensorFloor.blue());
-        sb.append("  , ML" + robot.motorLeftFront.getPower() + " MR:" + +robot.motorRightFront.getPower());
+        sb.append("  , Results:" + "ColorSensor White:" + robot.colorSensorFloor.green());
 
 
         Log.i(getLogKey(), sb.toString());

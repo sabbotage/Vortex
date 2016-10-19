@@ -6,6 +6,7 @@ import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
@@ -30,6 +31,8 @@ public class Robot {
 
     public ModernRoboticsI2cGyro gyroSensor;
     public ColorSensor colorSensorFloor;
+    public ColorSensor colorSensorBeacon;
+    public TouchSensor touchSensor;
 
 
     public Robot(HardwareMap hardwareMap) {
@@ -51,6 +54,9 @@ public class Robot {
         this.gyroSensor = (ModernRoboticsI2cGyro) this.hardwareMap.gyroSensor.get("gyroSensor");
         this.colorSensorFloor = hardwareMap.colorSensor.get("colorSensorFloor");
         this.colorSensorFloor.enableLed(true);
+
+        this.colorSensorBeacon = hardwareMap.colorSensor.get("colorSensorBeacon");
+        this.touchSensor = hardwareMap.touchSensor.get("touchSensor");
 
         resetHardwarePositions();
     }
@@ -142,6 +148,12 @@ public class Robot {
         LEFT
     }
 
+
+    public enum TeamEnum {
+        RED,
+
+        BLUE
+    }
 
     public enum StrafeEnum {
 

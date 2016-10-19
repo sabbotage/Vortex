@@ -34,6 +34,7 @@ package org.firstinspires.ftc.teamcode.vortex.sabbotage.opmodes.autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.vortex.sabbotage.opmodes.autonomous.steps.StepInterface;
+import org.firstinspires.ftc.teamcode.vortex.sabbotage.opmodes.autonomous.steps.Step_FindColorLine;
 import org.firstinspires.ftc.teamcode.vortex.sabbotage.opmodes.autonomous.steps.Step_Strafe;
 import org.firstinspires.ftc.teamcode.vortex.sabbotage.opmodes.autonomous.steps.Step_Straight;
 import org.firstinspires.ftc.teamcode.vortex.sabbotage.opmodes.autonomous.steps.Step_TurnLeft;
@@ -52,14 +53,16 @@ public class Tester extends AutonomousOp {
         // Here are our steps (in order) that make up our rescue plan.
         ArrayList<StepInterface> definedStepList = new ArrayList<StepInterface>();
 
-        definedStepList.add(new Step_Straight(2000, Robot.DirectionEnum.FORWARD));
+//        definedStepList.add(new Step_Straight(1000, Robot.DirectionEnum.FORWARD));
+//        definedStepList.add(new Step_Straight(1000, Robot.DirectionEnum.FORWARD));
+//        definedStepList.add(new Step_Straight(1000, Robot.DirectionEnum.FORWARD));
         definedStepList.add(new Step_Strafe(1000, Robot.StrafeEnum.RIGHT));
-        definedStepList.add(new Step_Strafe(1000, Robot.StrafeEnum.LEFT));
-        definedStepList.add(new Step_TurnRight(180));
-        definedStepList.add(new Step_TurnLeft(0));
-        definedStepList.add(new Step_Straight(2000, Robot.DirectionEnum.REVERSE));
+//        definedStepList.add(new Step_Strafe(1000, Robot.StrafeEnum.LEFT));
+//        definedStepList.add(new Step_TurnRight(180));
 //        definedStepList.add(new Step_TurnLeft(0));
-
+//        definedStepList.add(new Step_Straight(2000, Robot.DirectionEnum.REVERSE));
+//        definedStepList.add(new Step_TurnLeft(0));
+//        definedStepList.add(new Step_FindColorLine(Robot.ColorEnum.WHITE));
 
         return definedStepList;
     }

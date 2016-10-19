@@ -148,7 +148,7 @@ public class Step_Strafe implements StepInterface {
         }
 
 
-        if (isDistanceDone()) {
+        if (isDistanceDone() || robot.touchSensor.isPressed()) {
 
             logIt("Step is Done:");
 

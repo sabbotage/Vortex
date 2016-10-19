@@ -44,7 +44,7 @@ public class Step_ZigZap implements StepInterface {
 
     @Override
     public String getLogKey() {
-        return "Step_ZigZag";
+        return "Step_Zig_Zag";
     }
 
 
