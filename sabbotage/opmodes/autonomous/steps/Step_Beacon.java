@@ -72,12 +72,12 @@ public class Step_Beacon implements StepInterface {
 
         if (isOnlyRedLightDetected()) {
             logIt("FOUND COLOR RED! " + red);
-            detectedBeaconColor = Robot.TeamEnum.RED;
+            this.detectedBeaconColor = Robot.TeamEnum.RED;
             return true;
         }
         if (isOnlyBlueLightDetected()) {
             logIt("FOUND COLOR BLUE! " + blue);
-            detectedBeaconColor = Robot.TeamEnum.BLUE;
+            this.detectedBeaconColor = Robot.TeamEnum.BLUE;
             return true;
         }
 
@@ -141,7 +141,7 @@ public class Step_Beacon implements StepInterface {
 
     private void setLoopTimeDelay() {
 
-        targetWaitTimeMillSec = System.currentTimeMillis() + 3000;
+        targetWaitTimeMillSec = System.currentTimeMillis() + 1000;
     }
 
 
