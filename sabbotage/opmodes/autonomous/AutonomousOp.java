@@ -32,7 +32,7 @@ public abstract class AutonomousOp extends OpMode {
 
     @Override
     public void init() {
-        this.robot = new Robot(hardwareMap);
+        this.robot = new Robot(hardwareMap, telemetry);
         this.stepList = definedStepList();
         init_calibrateGyroSensors();
 

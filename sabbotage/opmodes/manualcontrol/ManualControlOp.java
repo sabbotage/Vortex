@@ -23,7 +23,7 @@ public class ManualControlOp extends OpMode {
     @Override
     public void init() {
 
-        this.robot = new Robot(hardwareMap);
+        this.robot = new Robot(hardwareMap, telemetry);
     }
 
 

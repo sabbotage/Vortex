@@ -6,6 +6,7 @@ import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -29,15 +30,21 @@ public class Robot {
     public DcMotor motorLeftFront;
     public DcMotor motorLeftRear;
 
+
+    public Servo servoPressButtonA;
+    public Servo servoPressButtonB;
+
+
     public ModernRoboticsI2cGyro gyroSensor;
     public ColorSensor colorSensorFloor;
     public ColorSensor colorSensorBeacon;
     public TouchSensor touchSensor;
 
 
-    public Robot(HardwareMap hardwareMap) {
+    public Robot(HardwareMap hardwareMap, Telemetry telemetry) {
 
         this.hardwareMap = hardwareMap;
+        this.telemetry = telemetry;
 
         if (this.hardwareMap == null) {
 
@@ -56,7 +63,12 @@ public class Robot {
         this.colorSensorFloor.enableLed(true);
 
         this.colorSensorBeacon = hardwareMap.colorSensor.get("colorSensorBeacon");
+
         this.touchSensor = hardwareMap.touchSensor.get("touchSensor");
+
+
+        this.servoPressButtonA = hardwareMap.servo.get("servoPressButtonA");
+        this.servoPressButtonB = hardwareMap.servo.get("servoPressButtonB");
 
         resetHardwarePositions();
     }
